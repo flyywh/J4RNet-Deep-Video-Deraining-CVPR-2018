@@ -1,0 +1,813 @@
+name: "SRCNN"
+input: "data"
+input_shape {
+  dim: 1
+  dim: 9
+  dim: 32
+  dim: 32
+}
+
+layer {
+  name: "Split_data"
+  type: "Split"
+  bottom: "data"
+  top: "DummyData1"
+}
+
+
+layer {
+  name: "DummyData1_rs"
+  type: "Reshape"
+  bottom: "DummyData1"
+  top: "DummyData1_rs"
+  reshape_param {
+    shape {
+      dim: -1
+      dim: 1
+      dim: 32
+      dim: 32
+    }
+  }
+}
+
+layer {
+  name: "Convolution1"
+  type: "Convolution"
+  bottom: "DummyData1_rs"
+  top: "Convolution1"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+layer {
+  name: "ReLU1"
+  type: "ReLU"
+  bottom: "Convolution1"
+  top: "Convolution1"
+}
+layer {
+  name: "Convolution2"
+  type: "Convolution"
+  bottom: "Convolution1"
+  top: "Convolution2"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "ReLU2"
+  type: "ReLU"
+  bottom: "Convolution2"
+  top: "Convolution2"
+}
+layer {
+  name: "Convolution3"
+  type: "Convolution"
+  bottom: "Convolution2"
+  top: "Convolution3"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "Eltwise1"
+  type: "Eltwise"
+  bottom: "Convolution1"
+  bottom: "Convolution3"
+  top: "Eltwise1"
+  eltwise_param {
+    operation: SUM
+    coeff: 0.5
+    coeff: 0.5
+  }
+}
+layer {
+  name: "ReLU3"
+  type: "ReLU"
+  bottom: "Eltwise1"
+  top: "Eltwise1"
+}
+layer {
+  name: "Convolution4"
+  type: "Convolution"
+  bottom: "Eltwise1"
+  top: "Convolution4"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "ReLU4"
+  type: "ReLU"
+  bottom: "Convolution4"
+  top: "Convolution4"
+}
+layer {
+  name: "Convolution5"
+  type: "Convolution"
+  bottom: "Convolution4"
+  top: "Convolution5"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "Eltwise2"
+  type: "Eltwise"
+  bottom: "Eltwise1"
+  bottom: "Convolution5"
+  top: "Eltwise2"
+  eltwise_param {
+    operation: SUM
+    coeff: 0.5
+    coeff: 0.5
+  }
+}
+layer {
+  name: "ReLU5"
+  type: "ReLU"
+  bottom: "Eltwise2"
+  top: "Eltwise2"
+}
+layer {
+  name: "Convolution6"
+  type: "Convolution"
+  bottom: "Eltwise2"
+  top: "Convolution6"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "ReLU6"
+  type: "ReLU"
+  bottom: "Convolution6"
+  top: "Convolution6"
+}
+layer {
+  name: "Convolution7"
+  type: "Convolution"
+  bottom: "Convolution6"
+  top: "Convolution7"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+layer {
+  name: "Eltwise3"
+  type: "Eltwise"
+  bottom: "Eltwise2"
+  bottom: "Convolution7"
+  top: "Eltwise3"
+  eltwise_param {
+    operation: SUM
+    coeff: 0.5
+    coeff: 0.5
+  }
+}
+layer {
+  name: "ReLU7"
+  type: "ReLU"
+  bottom: "Eltwise3"
+  top: "Eltwise3"
+}
+
+layer {
+  name: "Eltwise3_shrink"
+  type: "Convolution"
+  bottom: "Eltwise3"
+  top: "Eltwise3_shrink"
+  convolution_param {
+    num_output: 16
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+#
+# We need to add the BRCN connection here.
+#
+
+layer {
+  name: "BRCN_L1_rs"
+  type: "Reshape"
+  bottom: "Eltwise3_shrink"
+  top: "BRCN_L1_rs"
+  reshape_param {
+    shape {
+      dim: -1
+      dim: 144
+      dim: 32
+      dim: 32
+    }
+  }
+}
+
+layer {
+  name: "BRCN_L1_rs_slicer"
+  type: "Slice"
+  bottom: "BRCN_L1_rs"
+  top: "BRCN_L1_rs_pre"
+  top: "BRCN_L1_rs_mid"
+  top: "BRCN_L1_rs_tail"  
+  slice_param {
+     axis: 1
+     slice_point: 16
+	 slice_point: 128
+  }
+}
+
+layer {
+   name: "BRCN_L1_rs_concat_pre"
+   type: "Concat"
+   bottom: "BRCN_L1_rs_pre"
+   bottom: "BRCN_L1_rs_pre"
+   bottom: "BRCN_L1_rs_mid"   
+   top: "BRCN_L1_rs_concat_pre"
+   concat_param {
+     axis: 1
+   }
+}
+
+layer {
+  name: "BRCN_L1_rs_concat_pre_rs"
+  type: "Reshape"
+  bottom: "BRCN_L1_rs_concat_pre"
+  top: "BRCN_L1_rs_concat_pre_rs"
+  reshape_param {
+    shape {
+      dim: -1
+      dim: 16
+      dim: 32
+      dim: 32
+    }
+  }
+}
+
+#
+# tail Convolution
+#
+
+layer {
+   name: "BRCN_L1_rs_concat_tail"
+   type: "Concat"
+   bottom: "BRCN_L1_rs_mid"
+   bottom: "BRCN_L1_rs_tail"
+   bottom: "BRCN_L1_rs_tail"   
+   top: "BRCN_L1_rs_concat_tail"
+   concat_param {
+     axis: 1
+   }
+}
+
+layer {
+  name: "BRCN_L1_rs_concat_tail_rs"
+  type: "Reshape"
+  bottom: "BRCN_L1_rs_concat_tail"
+  top: "BRCN_L1_rs_concat_tail_rs"
+  reshape_param {
+    shape {
+      dim: -1
+      dim: 16
+      dim: 32
+      dim: 32
+    }
+  }
+}
+
+#
+# Note that, it is calculated here.
+#
+
+layer {
+   name: "BRCN_L1_input_feat"
+   type: "Concat"
+   bottom: "BRCN_L1_rs_concat_pre_rs"
+   bottom: "Eltwise3_shrink"
+   bottom: "BRCN_L1_rs_concat_tail_rs"   
+   top: "BRCN_L1_input_feat"
+   concat_param {
+     axis: 1
+   }
+}
+
+layer {
+  name: "motion_seg_conv1"
+  type: "Convolution"
+  bottom: "BRCN_L1_input_feat"
+  top: "motion_seg_conv1"  
+  convolution_param {
+    num_output: 8
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+layer {
+  name: "motion_seg_conv2"
+  type: "Convolution"
+  bottom: "motion_seg_conv1"
+  top: "motion_seg_conv2"  
+  convolution_param {
+    num_output: 2
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+layer {
+   name: "BRCN_L1_rs_concat_pre_rs_two"
+   type: "Concat"
+   bottom: "BRCN_L1_rs_concat_pre_rs"
+   bottom: "BRCN_L1_rs_concat_pre_rs" 
+   top: "BRCN_L1_rs_concat_pre_rs_two"
+   concat_param {
+     axis: 1
+   }
+}
+
+layer {
+   name: "BRCN_L1_rs_concat_tail_rs_two"
+   type: "Concat"
+   bottom: "BRCN_L1_rs_concat_tail_rs"
+   bottom: "BRCN_L1_rs_concat_tail_rs"
+   top: "BRCN_L1_rs_concat_tail_rs_two"
+   concat_param {
+     axis: 1
+   }
+}
+
+layer {
+  name: "BRCN_L1_pre_res_two"
+  type: "Convolution"
+  bottom: "BRCN_L1_rs_concat_pre_rs_two"
+  top: "BRCN_L1_pre_res_two"  
+  convolution_param {
+    num_output: 32
+	group: 2
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+layer {
+  name: "BRCN_L1_tail_res_two"
+  type: "Convolution"
+  bottom: "BRCN_L1_rs_concat_tail_rs_two"
+  top: "BRCN_L1_tail_res_two"  
+  convolution_param {
+    num_output: 32
+	group: 2
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+#
+# combine two cases
+#
+
+layer {
+  name: "BRCN_L1_pre_res_two_sep"
+  type: "Slice"
+  bottom: "BRCN_L1_pre_res_two"
+  top: "BRCN_L1_pre_res_two_l1"
+  top: "BRCN_L1_pre_res_two_l2" 
+  slice_param {
+    axis: 1
+    slice_point: 16
+  }
+}
+
+layer {
+  name: "BRCN_L1_tail_res_two_sep"
+  type: "Slice"
+  bottom: "BRCN_L1_tail_res_two"
+  top: "BRCN_L1_tail_res_two_l1"
+  top: "BRCN_L1_tail_res_two_l2" 
+  slice_param {
+    axis: 1
+    slice_point: 16
+  }
+}
+
+layer {
+  name: "motion_seg_conv2_sep"
+  type: "Slice"
+  bottom: "motion_seg_conv2"
+  top: "motion_seg_conv2_l1"
+  top: "motion_seg_conv2_l2" 
+  slice_param {
+    axis: 1
+    slice_point: 1
+  }
+}
+
+
+layer {
+   name: "motion_seg_conv2_l1_stack"
+   type: "Concat"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"
+   bottom: "motion_seg_conv2_l1"    
+   top: "motion_seg_conv2_l1_stack"
+   concat_param {
+     axis: 1
+   }
+}
+
+layer {
+   name: "motion_seg_conv2_l2_stack"
+   type: "Concat"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"
+   bottom: "motion_seg_conv2_l2"    
+   top: "motion_seg_conv2_l2_stack"
+   concat_param {
+     axis: 1
+   }
+}
+
+#
+# Linear weighting for part1 
+#
+
+layer {
+  name: "BRCN_L1_pre_res_part1"
+  type: "Eltwise"
+  bottom: "BRCN_L1_pre_res_two_l1"
+  bottom: "motion_seg_conv2_l1_stack"
+  top: "BRCN_L1_pre_res_part1"
+  eltwise_param {
+    operation: PROD
+
+  }
+}
+
+layer {
+  name: "BRCN_L1_pre_res_part2"
+  type: "Eltwise"
+  bottom: "BRCN_L1_pre_res_two_l2"
+  bottom: "motion_seg_conv2_l2_stack"
+  top: "BRCN_L1_pre_res_part2"
+  eltwise_param {
+    operation: PROD
+
+  }
+}
+
+layer {
+  name: "BRCN_L1_pre_res"
+  type: "Eltwise"
+  bottom: "BRCN_L1_pre_res_part1"
+  bottom: "BRCN_L1_pre_res_part2"
+  top: "BRCN_L1_pre_res"
+  eltwise_param {
+    operation: SUM
+  }
+}
+
+#
+# Linear weighting for part2
+#
+
+layer {
+  name: "BRCN_L1_tail_res_part1"
+  type: "Eltwise"
+  bottom: "BRCN_L1_tail_res_two_l1"
+  bottom: "motion_seg_conv2_l1_stack"
+  top: "BRCN_L1_tail_res_part1"
+  eltwise_param {
+    operation: PROD
+
+  }
+}
+
+layer {
+  name: "BRCN_L1_tail_res_part2"
+  type: "Eltwise"
+  bottom: "BRCN_L1_tail_res_two_l2"
+  bottom: "motion_seg_conv2_l2_stack"
+  top: "BRCN_L1_tail_res_part2"
+  eltwise_param {
+    operation: PROD
+
+  }
+}
+
+layer {
+  name: "BRCN_L1_tail_res"
+  type: "Eltwise"
+  bottom: "BRCN_L1_tail_res_part1"
+  bottom: "BRCN_L1_tail_res_part2"
+  top: "BRCN_L1_tail_res"
+  eltwise_param {
+    operation: SUM
+  }
+}
+
+layer {
+  name: "Eltwise_BRCN_L1"
+  type: "Eltwise"
+  bottom: "BRCN_L1_pre_res"
+  bottom: "BRCN_L1_tail_res"
+  bottom: "Eltwise3_shrink"
+  top: "Eltwise_BRCN_L1"
+  eltwise_param {
+    operation: SUM
+
+  }
+}
+
+layer {
+  name: "Eltwise_BRCN_L1_expand"
+  type: "Convolution"
+  bottom: "Eltwise_BRCN_L1"
+  top: "Eltwise_BRCN_L1_expand"
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+
+layer {
+  name: "All_Eltwise1_temporal"
+  type: "Eltwise"
+  bottom: "Eltwise_BRCN_L1_expand"
+  bottom: "Eltwise3"
+  top: "All_Eltwise1_temporal"
+  eltwise_param {
+    operation: SUM
+
+  }
+}
+
+#
+# The end of BRCN connection here.
+#
+
+layer {
+  name: "Convolution8"
+  type: "Convolution"
+  bottom: "All_Eltwise1_temporal"
+  top: "Convolution8"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "ReLU8"
+  type: "ReLU"
+  bottom: "Convolution8"
+  top: "Convolution8"
+}
+layer {
+  name: "Convolution9"
+  type: "Convolution"
+  bottom: "Convolution8"
+  top: "Convolution9"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "Eltwise4"
+  type: "Eltwise"
+  bottom: "Eltwise3"
+  bottom: "Convolution9"
+  top: "Eltwise4"
+  eltwise_param {
+    operation: SUM
+    coeff: 0.5
+    coeff: 0.5
+  }
+}
+layer {
+  name: "ReLU9"
+  type: "ReLU"
+  bottom: "Eltwise4"
+  top: "Eltwise4"
+}
+layer {
+  name: "Convolution10"
+  type: "Convolution"
+  bottom: "Eltwise4"
+  top: "Convolution10"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "ReLU10"
+  type: "ReLU"
+  bottom: "Convolution10"
+  top: "Convolution10"
+}
+layer {
+  name: "Convolution11"
+  type: "Convolution"
+  bottom: "Convolution10"
+  top: "Convolution11"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "Eltwise5"
+  type: "Eltwise"
+  bottom: "Eltwise4"
+  bottom: "Convolution11"
+  top: "Eltwise5"
+  eltwise_param {
+    operation: SUM
+    coeff: 0.5
+    coeff: 0.5
+  }
+}
+layer {
+  name: "ReLU11"
+  type: "ReLU"
+  bottom: "Eltwise5"
+  top: "Eltwise5"
+}
+layer {
+  name: "Eltwise6"
+  type: "Eltwise"
+  bottom: "Convolution1"
+  bottom: "Eltwise5"
+  top: "Eltwise6"
+  eltwise_param {
+    operation: SUM
+    coeff: 0.5
+    coeff: 0.5
+  }
+}
+layer {
+  name: "Convolution12"
+  type: "Convolution"
+  bottom: "Eltwise6"
+  top: "Convolution12"
+  param { lr_mult: 0.01 decay_mult: 1 }
+  param { lr_mult: 0.01 decay_mult: 0 }  
+  convolution_param {
+    num_output: 1
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+  }
+}
+layer {
+  name: "Eltwise7"
+  type: "Eltwise"
+  bottom: "DummyData1_rs"
+  bottom: "Convolution12"
+  top: "Eltwise7"
+  eltwise_param {
+    operation: SUM
+  }
+}
+
