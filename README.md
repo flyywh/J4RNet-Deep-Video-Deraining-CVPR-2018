@@ -2,5 +2,5 @@
 
 This is the testing code of "Erase or Fill? Deep Joint Recurrent Rain Removal and Reconstruction in Videos" (CVPR-2018).
 
-Datasets and training codes are on the way.
+Dataset and training code are on the way.
 
