@@ -41,14 +41,14 @@ psnr_list  =zeros(100, 1);
 ssim_list  =zeros(100, 1);
 
 
-for i=1:50
+for i=5:46
     tmp_img = imread([input_dir, '/', num2str(i, '%03d'), '.png']);
     [hei, wid, ~] = size(tmp_img);
     
     tmp_cnt = 1;
     image_list = zeros(hei, wid, 9);
     for t=i-4:i+4
-        image = imread([input_dir, '/', num2str(i, '%03d'), '.png']);
+        image = imread([input_dir, '/', num2str(t, '%03d'), '.png']);
         
         image = rgb2ycbcr(image);
         if t==i
